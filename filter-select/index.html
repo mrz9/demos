@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>filter-select演示</title>
+    <script src="https://cdn.bootcss.com/jquery/1.11.1/jquery.min.js"></script>
+</head>
+<body>
+    <p>动态添加select时，option需要剔除已选的项</p>
+    <hr>
+    <ul>
+        <li>
+            <select name="contact" data-plugin="filter-select" filter-name="filter1">
+                <option value="potato">Potato</option>
+                <option value="telegram">Telegram</option>
+                <option value="whatsapp">Whatsapp</option>
+                <option value="wechat">Wechat</option>
+                <option value="qq">QQ</option>
+                <option value="phone">Phone</option>
+                <option value="email">Email</option>
+            </select>
+            <button type="button" class="add" data-tpl="#contact">添加</button>
+        </li>
+    </ul>
+    <hr>
+    <ul>
+        <li>
+            <select name="type" data-plugin="filter-select" filter-name="filter2">
+                <option value="1">护照</option>
+                <option value="telegram">身份证</option>
+                <option value="whatsapp">其他证件</option>
+            </select>
+            <button type="button" class="add" data-tpl="#type">添加</button>
+        </li>
+    </ul>
+
+    <!--添加模版-->
+    <script type="text/html" id="contact">
+        <li>
+            <select name="contact" data-plugin="filter-select" filter-name="filter1"></select>
+            <button type="button" class="del">删除</button>
+        </li>
+    </script>
+
+    <!--添加模版-->
+    <script type="text/html" id="type">
+        <li>
+            <select name="type" data-plugin="filter-select" filter-name="filter2"></select>
+            <button type="button" class="del">删除</button>
+        </li>
+    </script>
+
+    <script src="filter-select.js"></script>
+    <script>
+    //实例化filter-select 
+    $('select[data-plugin="filter-select"').each(function(){
+        var name = $(this).attr('filter-name');
+        if(name){
+            var origin_data = [];
+            $(this).children('option').each(function(){
+                origin_data.push({
+                    value:$(this).val(),
+                    text:$(this).text()
+                })
+            })
+            filterSelect(name,origin_data);
+        }
+    });
+
+
+    //other
+    $('body').on('click','.add',function(){
+        //filter-select
+        var select = $(this).siblings('select[data-plugin="filter-select"]');
+        if(select.length>0 && filterSelect(select.attr('filter-name')).getSafeList().length === 0) {
+            alert('没有跟多选项了');
+            return false;
+        }
+            
+        $(this).closest('ul').append($('script'+$(this).data('tpl')).html());
+        select.length>0 && filterSelect(select.attr('filter-name')).update();
+    }).on('click','.del',function(){
+        //filter-select
+        var filterName = '';
+        var select = $(this).siblings('select[data-plugin="filter-select"]');
+        if(select.length){
+            filterName = select.attr('filter-name');
+        }
+
+        $(this).closest('li').remove();
+        filterName && filterSelect(filterName).update();
+    })
+    </script>
+</body>
+</html>
