@@ -16,7 +16,17 @@ function filterSelect(name,data){
         fsItem = {};
         filterSelectMap[name] = fsItem;
     }
-
+    //添加是否有请选择这种空的初始项
+    fsItem.hasEmpty = false; 
+    $.each(data,function(idx,item){
+        if(item.value === '' || item.value === null){
+            fsItem.hasEmpty = true;
+            fsItem.emptyItem = item;
+            data.splice(idx,1);
+            return false;
+        }
+    });
+    
     fsItem.name = name;
     fsItem.origin = JSON.parse(JSON.stringify(data));
     //已使用的集合
@@ -44,7 +54,7 @@ function filterSelect(name,data){
         $('select[filter-name="'+fsItem.name+'"]').each(function(idx){
             var self = this;
             var self_val = $(this).val();
-            var options = '';
+            var options = fsItem.hasEmpty ? '<option  value="'+ fsItem.emptyItem.value +'">'+ fsItem.emptyItem.text+'</option>' : '' ;
             if(self_val !== '' && self_val !== null){
                 var rs = getItemByValue(self_val);
                 if(rs !== null){
@@ -52,14 +62,16 @@ function filterSelect(name,data){
                     if(fsItem.used.indexOf(rs_string) === -1){
                         fsItem.used.push(rs_string);
                     }
-                    options = '<option selected="" value="'+ rs.value +'">'+rs.text+'</option>';
+                    options += '<option selected="" value="'+ rs.value +'">'+rs.text+'</option>';
                 }
             }else{
                 var safeList = fsItem.getSafeList();
                 if(safeList.length>0){
                     var s = safeList[0];
-                    fsItem.used.push(JSON.stringify(s));
-                    options = '<option selected="" value="'+ s.value +'">'+s.text+'</option>';
+                    if(!fsItem.hasEmpty){
+                        fsItem.used.push(JSON.stringify(s));  
+                        options += '<option selected="" value="'+ s.value +'">'+s.text+'</option>';
+                    } 
                 }
             }
             selectHtmls.push(options);
