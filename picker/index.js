@@ -20,8 +20,13 @@
             isAddon = false;
         }
 
+        //是否可以重复选择
+        var repeat = true;
+        if($(this).data('repeat') === false){
+            repeat = false;
+        }
         //为了统一传入数据的类型
-        var selected = (function(){
+        var selected = value === '' ? [] : (function(){
                 var rs = [];
                 var arr =  value.split(',');
                 $.each(arr,function(i,v){
@@ -32,7 +37,7 @@
 
         var el,selection,container;
 
-        var dom = '<div class="color-picker"><div class="color-picker-wrap ' + ( isAddon ? 'color-picker-addon input-group' : '') + '"><div class="color-picker-container clearfix"></div>' + ( isAddon ? '<div class="color-picker-btn input-group-addon"><i class="fa fa-paint-brush"></i></div>' : '') + '</div><div class="color-picker-selection clearfix"></div></div>';
+        var dom = '<div class="color-picker"><div class="color-picker-wrap ' + ( isAddon ? 'color-picker-addon input-group' : '') + '"><div class="color-picker-container clearfix"></div>' + ( isAddon ? '<div class="color-picker-btn input-group-addon"><i class="fa fa-cube"></i></div>' : '') + '</div><div class="color-picker-selection clearfix"></div></div>';
         var el = $(dom)
         selection = el.find('.color-picker-selection');
         container = el.find('.color-picker-container');
@@ -56,11 +61,14 @@
                 var parent = $(this).parent();
                 var idx = selected.indexOf(value);
                 if(parent.hasClass('color-picker-container')){//container
+                    if(repeat){
+                        idx = $(this).index();
+                    }
                     if(idx !== -1){
                         selected.splice(idx,1);
                     }
                 }else if(parent.hasClass('color-picker-selection')){//selection
-                    if(idx === -1){
+                    if(repeat || idx === -1){
                         selected.push(value);
                     }
                 }
@@ -122,7 +130,7 @@
         function renderSelection(){
             var html = '';
             $.each(pickerData,function(idx,item){
-                if(selected.indexOf(item.value) === -1){
+                if(repeat || selected.indexOf(item.value) === -1){
                     html += "<span data-value='"+item.value+"' style='background-color:"+item.text+"'></span>";
                 }
             });
@@ -144,7 +152,7 @@
 
         //添加样式
         function createStyle(){
-            var cssString = '.color-picker{position:relative}.color-picker-container{border:solid #ddd 1px;background-color:white;border-radius:4px;cursor:text;min-height:32px}.has-error>.color-picker .color-picker-container{border-color:#a94442}.has-success>.color-picker .color-picker-container{border-color:#3c763d}.color-picker-container,.color-picker-selection{padding:0 5px 5px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}.color-picker-wrap.color-picker-addon{display:table}.color-picker-addon .color-picker-container{border-top-right-radius:0;border-bottom-right-radius:0}.color-picker-container>span i{font-style:normal}.color-picker-container>span,.color-picker-selection>span{border:1px solid #eaeaea;color:#fff;border-radius:3px;cursor:default;float:left;margin-right:5px;margin-top:5px;padding:2px 6px;width:25px;height:25px;text-align:center;float:left}.color-picker-selection{display:none;position:absolute;z-index:99999;left:0;right:0;border:solid #ddd 1px;background-color:#fff}.color-picker-search__field{background:transparent;border:none!important;outline:0;box-shadow:none;-webkit-appearance:textfield;font-size:100%;margin-top:5px;padding:0;float:left}';
+            var cssString = '.color-picker{position:relative}.color-picker-container{border:solid #ddd 1px;background-color:white;border-radius:4px;cursor:text;min-height:32px}.has-error>.color-picker .color-picker-container{border-color:#a94442!important}.has-success>.color-picker .color-picker-container{border-color:#3c763d}.color-picker-container,.color-picker-selection{padding:0 5px 5px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}.color-picker-wrap.color-picker-addon{display:table}.color-picker-addon .color-picker-container{border-top-right-radius:0;border-bottom-right-radius:0}.color-picker-container>span i{font-style:normal}.color-picker-container>span,.color-picker-selection>span{border:1px solid #eaeaea;color:#fff;border-radius:3px;cursor:default;float:left;margin-right:5px;margin-top:5px;padding:2px 6px;width:25px;height:25px;text-align:center;float:left}.color-picker-selection{display:none;position:absolute;z-index:99999;left:0;right:0;border:solid #ddd 1px;background-color:#fff}.color-picker-search__field{background:transparent;border:none!important;outline:0;box-shadow:none;-webkit-appearance:textfield;font-size:100%;margin-top:5px;padding:0;float:left}';
 
             if($('style#color-picker-style').length == 0){
                 var style = document.createElement("style");	
