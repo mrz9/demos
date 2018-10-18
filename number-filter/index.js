@@ -66,7 +66,7 @@
         //检查是否有验证
         var form = $(this).closest('form');
         var idx = form.data('validIndex');
-        if (isNaN(idx)) return;
+        if(isNaN(idx) || !$(this).attr('datatype')) return;
         if (window.valider && window.valider[idx]) {
             window.valider[idx].check(false, this);
         }
