@@ -6,34 +6,48 @@
     if(typeof window.zModule == 'undefined'){
         window.zModule = {
             load:function(url,sync){
-                $.ajax({
-                    url:url,
-                    async:!sync
-                }).done(function(rs){
+                var xhr = new XMLHttpRequest();
+                xhr.open('GET',url,false);
+                xhr.onload = function(){
+                    var rs = xhr.responseText;
                     if(typeof window.module_id_index == 'undefined') {
                         window.module_id_index = 0;
                     }
-                    if($.trim(rs)){
+                    if(rs.trim()){
                         var module_index = module_id_index++;
                         var template = rs.match(/\<template\>([\s\S]*)\<\/template\>/);
                         var style = rs.match(/\<style\>([\s\S]*)\<\/style\>/);
                         var script = rs.match(/\<script\>([\s\S]*)\<\/script\>/);
-                
-                        if(template && $.trim(template[1])){
-                            $('body').append('<div id="module_'+ module_index +'">'+template[1]+'</div>');
+                        
+                        if(style && style[1].trim()){
+                            var sty = document.createElement('style');
+                            sty.setAttribute("type", "text/css");
+                            sty.setAttribute("id", 'module_style_'+ module_index);
+                            var css = style[1];
+                            if (sty.styleSheet) { // IE
+                                sty.styleSheet.cssText = css;
+                            } else {
+                                sty.appendChild(document.createTextNode(css));
+                            }
+                            document.querySelector('head').appendChild(sty);
+                        }
+
+                        if(template && template[1].trim()){
+                            var div = document.createElement('div');
+                            div.id = 'module_'+ module_index;
+                            div.innerHTML = template[1];
+                            document.body.appendChild(div);
                         }
                 
-                        if(style && $.trim(style[1])){
-                            $('head').append('<style id="module_style_'+ module_index +'">'+style[1]+'</style>')
-                        }
-                
-                        if(script && $.trim(script[1])){
-                            eval(script[1]);
+                        if(script && style[1].trim()){
+                            setTimeout(script[1],0);
                         }
                     }
-                }).fail(function(err){
+                }
+                xhr.onerror = function(){
                     console.error(err);
-                })
+                }
+                xhr.send(null);
             }
         } 
     }
