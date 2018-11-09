@@ -1,0 +1,187 @@
+<template>
+    <div id="sidebar">
+        
+        <div class="sidebar-contact-wrap">
+            <div class="more">
+                <a href="javascript:;" class="side-item side-contact charge"><i class="icon-ptl icon-user"></i><div class="info"></div></a>
+                <a href="javascript:;" class="side-item side-contact kf"><i class="icon-ptl icon-kefu"></i><div class="info"></div></a>
+            </div>
+            <a href="javascript:;" class="link-item top side-item"><i class="icon-ptl icon-contact"></i><div class="info">在线客服</div></a>
+        </div>
+        <a href="javascript:;" class="side-item top" style="display:none"><i class="icon-ptl icon-top"></i></a>
+    </div>
+</template>
+
+<script>
+;$(function(){
+    $('body').on('click','#sidebar .icon-top',function(){
+        $('html,body').animate({scrollTop:0}, '500');
+    });
+    $(window).on('scroll',function(){
+        var top = document.documentElement.scrollTop || document.body.scrollTop;
+        if(top>200){
+            $('#sidebar>.top').show();
+        }else{
+            $('#sidebar>.top').hide();
+        }
+    }).trigger('scroll')
+    
+});
+</script>
+
+<style>
+    #sidebar,#sidebar .sidebar-contact-wrap {
+        position: relative;
+        display: flex;
+        display: -webkit-flex;
+        display: -ms-flex;
+        display: -moz-flex;
+        flex-direction: column;
+        -webkit-flex-direction: column;
+        -ms-flex-direction: column;
+        -moz-flex-direction: column;
+        align-items: flex-end;
+        -webkit-align-items: flex-end;
+        -ms-align-items: flex-end;
+        -moz-align-items: flex-end;
+    }
+    #sidebar {
+        position: fixed;
+        z-index:999;
+        right:23px;
+        bottom:149px;
+    }
+
+    #sidebar .side-item::after {
+        content:'';
+        display: table;
+        clear: both;
+    }
+
+    #sidebar .side-item>i,
+    #sidebar .side-item>.info {
+        float:left;
+    }
+
+    #sidebar .side-item {
+        transition: all .4s;
+        min-width:50px;
+        min-height:50px;
+        border-radius: 8px;
+        background-color:#C6D0DB;
+        color:#fff;
+        display: flex;
+        display: -webkit-flex;
+        display: -ms-flex;
+        display: -moz-flex;
+        align-items: center;
+        -webkit-align-items: center;
+        -ms-align-items: center;
+        -moz-align-items: center;
+        overflow: hidden;
+        white-space: nowrap;
+    }
+    #sidebar .side-item::after {
+        content:'';
+        display: table;
+        clear: both;
+    }
+    #sidebar .side-item>.icon-ptl {
+        font-size:30px;
+        line-height: 1;
+        display: block;
+        width:50px;
+        height:50px;
+        padding:10px;
+    }
+    #sidebar .side-item .info {
+        display: none;
+        min-width:130px;
+        font-size:12px;
+        padding:10px 10px 10px 0;
+        text-align: left;
+        white-space:nowrap
+    }
+
+    #sidebar .side-item .info p {
+        margin:0;
+    }
+
+    #sidebar .side-contact,
+    #sidebar .link-item:hover {
+        background: #3282FA;
+    }
+
+    #sidebar .side-contact .info,
+    #sidebar .link-item:hover .info {
+        display: block;
+    }
+    #sidebar .side-item.top,
+    #sidebar .side-item + .side-item {
+        margin-top:8px;
+    }
+    #sidebar .side-contact {
+        transition: transform .3s ,opacity .3s !important;
+        right:0;
+        opacity: 0;
+        width:0!important;
+        padding:0!important;
+        transform:translateY(100%);
+        -webkit-transform:translateY(100%);
+        -moz-transform:translateY(100%);
+        -ms-transform:translateY(100%);
+    }
+    #sidebar .sidebar-contact-wrap {
+        height:50px;
+        width:50px;
+    }
+    #sidebar .more {
+        position: absolute;
+        bottom:0;
+        right:0;
+        height:100%;
+        overflow: hidden;
+    }
+    #sidebar .sidebar-contact-wrap .side-item {
+        position: absolute;
+        right:0;
+        bottom:0;
+    }
+    #sidebar .sidebar-contact-wrap:hover {
+        height: auto;
+        width:auto;
+    }
+    #sidebar .sidebar-contact-wrap:hover .more {
+        position:static;
+        height: auto;
+
+    }
+    #sidebar .sidebar-contact-wrap:hover .side-contact{
+        opacity: 1;
+        min-width:180px!important;
+        transform:translateY(0);
+        -webkit-transform:translateY(0);
+        -ms-transform:translateY(0);
+        -moz-transform:translateY(0);
+    }
+    #sidebar .sidebar-contact-wrap:hover .side-item{
+        position:static;
+        background: #3282FA;
+        min-width:180px;
+        width:100%;
+    }
+    #sidebar .sidebar-contact-wrap:hover .kf>i{
+        padding-top:10px;
+        align-self: flex-start;
+        -webkit-align-self: flex-start;
+        -moz-align-self: flex-start;
+        -ms-align-self: flex-start;
+    }
+    #sidebar .sidebar-contact-wrap:hover .side-item .info{
+        display: block;
+    }
+    #sidebar .sidebar-contact-wrap .side-item.charge {
+        transition-delay: .1s!important;
+    }
+</style>
+
