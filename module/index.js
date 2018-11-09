@@ -7,7 +7,7 @@
         window.zModule = {
             load:function(url,sync){
                 var xhr = new XMLHttpRequest();
-                xhr.open('GET',url,false);
+                xhr.open('GET',url,!!sync);
                 xhr.onload = function(){
                     var rs = xhr.responseText;
                     if(typeof window.module_id_index == 'undefined') {
