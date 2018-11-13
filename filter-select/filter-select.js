@@ -62,7 +62,13 @@ function filterSelect(name,data){
                     if(fsItem.used.indexOf(rs_string) === -1){
                         fsItem.used.push(rs_string);
                     }
-                    options += '<option selected="" value="'+ rs.value +'">'+rs.text+'</option>';
+                    var data_str = '';
+                    if(toString.call(rs.data) === '[object Object]'){
+                        $.each(rs.data,function(key,val){
+                            data_str += ' data-'+key+'='+val;
+                        })
+                    }
+                    options += '<option selected="" value="'+ rs.value +'" '+ data_str +'>'+rs.text+'</option>';
                 }
             }else{
                 var safeList = fsItem.getSafeList();
@@ -70,7 +76,13 @@ function filterSelect(name,data){
                     var s = safeList[0];
                     if(!fsItem.hasEmpty){
                         fsItem.used.push(JSON.stringify(s));  
-                        options += '<option selected="" value="'+ s.value +'">'+s.text+'</option>';
+                        var data_str = '';
+                        if(toString.call(s.data) === '[object Object]'){
+                            $.each(s.data,function(key,val){
+                                data_str += ' data-'+key+'='+val;
+                            })
+                        }
+                        options += '<option selected="" value="'+ s.value +'"  '+ data_str +'>'+s.text+'</option>';
                     } 
                 }
             }
@@ -98,9 +110,12 @@ function filterSelect(name,data){
     function init(){
         fsItem.update();
         //chang事件
-        $('body').on('change','select[filter-name="'+fsItem.name+'"]',function(){
-            fsItem.update();
-        })
+        //需要优先执行
+        document.body.addEventListener('change',function(e){
+            if(e.target.tagName.toUpperCase() === 'SELECT' && e.target.getAttribute('filter-name') === fsItem.name){
+                fsItem.update();
+            }
+        },true)
 
     }
 
