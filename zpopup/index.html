@@ -1,0 +1,140 @@
+<!--选择人员弹窗  多个弹窗的情况先要动态添加模版-->
+<script type="text/html" id="z-popup-tpl">
+    <div class="container-fluid z-popup" style="display: none">
+        <div class="row">
+            <div class="col-sm-6">
+                <div class=" origin-box">
+                    <div class="">
+                        <h5 class="stitle">未选择</h5>
+                    </div>
+                    <div class="scroll-view">
+                        <ul class="origin"></ul>
+                    </div>
+                </div>
+            </div>
+            <div class="col-sm-6">
+                <div class=" selected-box">
+                    <div class="">
+                        <h5 class="stitle">已选择</h5>
+                    </div>
+                    <div class=" selected scroll-view">
+                        <ul></ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</script>
+<script>
+$('.action').each(function(){
+        /**
+         *
+         * 弹窗部分的dom不共用，需要动态添加多个
+         **/
+
+        var content = $($('#z-popup-tpl').html());
+        $('body').append(content);
+        var single = $(this).data('single');
+        var type = $(this).data('type');
+
+        $(this).zPopup({
+            title:'选择人员',
+            content:content,
+            single: single,
+            hideRootAll:true,
+            type: 2,
+            init:function(cb){
+                /**
+                 * 此方法是打开弹窗设置初始化数据
+                 * 注意：
+                 * 需要构建match字段，改字段用于区分是否勾选
+                 **/
+
+//                 cb([{
+//                     id:1,
+//                     name:'管理员',
+//                     type:'member',
+//                     is_checkbox:1,
+//                     is_child:0,
+//                     disabled:1,
+//                     match:'member_1_1',
+//                 },
+//                 {
+//                     id:2,
+//                     is_checkbox:1,
+//                     is_child:0,
+//                     disabled:1,
+//                     name:"测试用户",
+//                     type:"member",
+//                     match:"member_3_2",
+//                 }
+//                ])
+                var val  = $(this.el).siblings('[name=init]').val();
+                if(val){
+                    cb(JSON.parse(val));
+                }
+            },
+            load:function(param,cb){
+                /**
+                 * 此方法是打开弹窗或者点击请求时的处理逻辑
+                 * 此处约定勾选后会带回选中项的数据回来，所以可以通过对请求回来的数据处理，提交添加或设置需要的字段
+                 * param.first 表示第一次打开，这里处理第一次的数据操作php渲染或者ajax请求都可以
+                 **/
+                var self = this;
+                if(!param) return false;
+                var baseUrl = '?ct=admin&ac=ajax_staff_data';
+                var url;
+                if(param.first){
+                    url = baseUrl
+                }else if(!isNaN(param.id)){
+                    url = baseUrl + '&department_id=' + param.id ;
+                }
+                dataFilter = {action: 'report'};
+
+
+
+                $.ajax({
+                    url: url,
+                    type: 'get',
+                    dataType:"JSON",
+                    data: {filter: dataFilter},
+                }).done(function (data) {
+                    if(self.type == 2){ //选择人员
+                        $.each(data,function(i,item){
+                            if(item.type=="member"){
+                                item.is_checkbox = 1
+                            }
+                        })
+                    }
+                    cb(data);
+                }).fail(function (e) {
+                    layer.alert('获取数据出错');
+                });
+            },
+            callback:function(rs){
+                var dept = [],
+                    mem = [];
+                var selectList = $(this.el).siblings('.select-list');
+                selectList.html('');
+                $.each(rs,function(idx,item){
+                    switch(item.type){
+                        case "department":
+                            dept.push(item.id);
+                            selectList.append('<label class="label label-primary">部门：'+item.name+'</label>\n')
+                            break;
+                        case "member":
+                            mem.push(item.id);
+                            selectList.append('<label class="label label-primary">员工：'+item.name+'</label>\n')
+                            break;
+                    }
+                });
+                if(type ==1){
+                    $(this.el).siblings('[name=report_member]').val(mem.join(','));
+                }else{
+                    $(this.el).siblings('[name=copier]').val(mem.join(','))
+                }
+
+            }
+        });
+    });
+</script>

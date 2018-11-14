@@ -1,0 +1,88 @@
+.z-popup .layui-layer-btn {
+    position: absolute;
+    width: 100%;
+    bottom: 0;
+    background: #f2f2f2;
+    text-align: center;
+  }
+  .z-popup .scroll-view {
+    background: #f2f2f2;
+    height: 450px;
+    overflow-y: auto;
+    border-radius: 8px;
+    padding-top: 10px;
+    padding-bottom: 10px;
+  }
+  .z-popup ul {
+    padding-left: 24px;
+  }
+  .z-popup ul li {
+    line-height: 34px;
+    list-style: none;
+  }
+  .z-popup ul li a {
+    color: #444;
+    font-size: 14px;
+    display: block;
+    text-decoration: none!important;
+  }
+  .z-popup ul li a:hover,
+  .z-popup ul li a i:hover {
+    color: #4e97d9;
+  }
+  .z-popup ul li a i {
+    display: inline-block;
+    color: #888;
+    margin-right: 10px;
+    font-size: 16px;
+  }
+  .z-popup ul li ul {
+    display: none;
+  }
+  .z-popup ul li.open > ul {
+    display: block;
+  }
+  .z-popup ul li input {
+    margin-right: 10px;
+  }
+  .z-popup .selected ul {
+    padding-left: 0;
+  }
+  .z-popup .selected ul li {
+    line-height: 40px;
+    overflow: hidden;
+    padding: 0 10px;
+  }
+  .z-popup .selected ul li span {
+    float: left;
+  }
+  .z-popup .selected ul li span.all {
+    color: #888;
+    margin-left: 8px;
+  }
+  .z-popup .selected ul li i {
+    float: right;
+    font-size: 16px;
+    color: red;
+    margin-top: 12px;
+  }
+  .z-popup .has-child2 {
+    font-size: 12px;
+    float: right;
+    color: #0a8bfb!important;
+    margin-right: 20px;
+    text-decoration: none!important;
+  }
+  .z-popup .has-child2::before {
+    content: '下级';
+  }
+  .z-popup .open > .has-child2::before {
+    content: '收起';
+  }
+  .z-popup .has-child > .popup-font::before {
+    content: "\f196";
+  }
+  .z-popup .open > .has-child > .popup-font::before {
+    content: "\f147";
+  }
+  
